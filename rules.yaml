@@ -1,0 +1,70 @@
+rules:
+  - id: javalin-xss-in-userprofile
+    patterns:
+      - pattern: |
+          ctx.contentType("text/html").result(...)
+      - pattern: |
+          $HTML + $USERINPUT
+    message: |
+      Potential Reflected XSS (CWE-79).
+      User-controlled data (userName) is concatenated directly into HTML response without escaping.
+      Use HTML encoding (e.g., StringEscapeUtils.escapeHtml4) or a template engine.
+    languages:
+      - java
+    severity: ERROR
+    metadata:
+      cwe: "CWE-79"
+      owasp: "A03:2021 - Injection"
+      confidence: HIGH
+
+  - id: javalin-path-traversal-in-export
+    pattern: |
+      new File($DIR + $FILENAME)
+    message: |
+      Potential Path Traversal (CWE-22).
+      User-controlled filename is concatenated with base directory without validation.
+      Attacker can use "../" to write files outside /tmp/reports/.
+      Use Paths.get(baseDir).resolve(filename).normalize() and verify the result starts with baseDir.
+    languages:
+      - java
+    severity: ERROR
+    metadata:
+      cwe: "CWE-22"
+      owasp: "A01:2021 - Broken Access Control"
+      confidence: HIGH
+
+  - id: javalin-ssrf-in-notify
+    patterns:
+      - pattern: |
+          URL $URL = new URL($USERINPUT);
+          ...
+          $URL.openConnection();
+    message: |
+      Potential Server-Side Request Forgery (CWE-918).
+      User-controlled URL is used to make server-side HTTP requests without validation.
+      Attacker can access internal services (localhost, 169.254.169.254, internal IPs).
+      Validate URL against allowlist and block private/internal IP ranges.
+    languages:
+      - java
+    severity: ERROR
+    metadata:
+      cwe: "CWE-918"
+      owasp: "A10:2021 - Server-Side Request Forgery"
+      confidence: HIGH
+
+  - id: javalin-info-disclosure-in-errors
+    pattern-either:
+      - pattern: |
+          ctx.status(400).result("Invalid data: " + e.getMessage())
+      - pattern: |
+          ctx.status(400).result(e.getMessage())
+    message: |
+      Potential Information Disclosure (CWE-209).
+      Exception messages are returned directly to the client, revealing internal logic.
+      Return generic error messages and log detailed errors server-side.
+    languages:
+      - java
+    severity: WARNING
+    metadata:
+      cwe: "CWE-209"
+      confidence: MEDIUM
