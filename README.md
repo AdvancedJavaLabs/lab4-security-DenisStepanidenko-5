@@ -102,6 +102,11 @@ curl "http://localhost:7000/userProfile?userId=evil"
 
 > Данный пример — лишь отправная точка. Исследуйте **все** эндпоинты самостоятельно.
 
+Коллекция ручных запросов в Postman:   
+
+<img width="726" height="1176" alt="image" src="https://github.com/user-attachments/assets/4053d0a3-8937-4516-b487-bd4a984077b4" />
+
+Пример XSS alert:   
 <img width="530" height="180" alt="image" src="https://github.com/user-attachments/assets/b6398ecd-ef60-49a9-8849-0feb81deea0d" />
 
 
