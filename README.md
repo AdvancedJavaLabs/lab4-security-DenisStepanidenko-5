@@ -538,7 +538,7 @@ public class SSRTTest {
 ---
 
 
-#### 🔴 Finding #4 — Server-Side Request Forgery (SSRF)
+#### 🔴 Finding #4 — Information Disclosure through Error Messages
 
 | Поле | Значение |
 |------|----------|
